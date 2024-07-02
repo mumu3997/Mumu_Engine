@@ -17,11 +17,11 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
-{
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 핸들(올바른 메모리 위치 접근)
+                     _In_opt_ HINSTANCE hPrevInstance, // 바로앞에 실행된 현재 프로그램의 인스턴스 핸들, 없으면 null
+                     _In_ LPWSTR    lpCmdLine, // 명령행으로 입력된 프로그램 인수
+                     _In_ int       nCmdShow) // 프로그램이 실행될 형태, 보통 모양정보등 전달
+{ 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -146,6 +146,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
+
+            // 파랑 브러쉬 생성 
+            HBRUSH bluebrush = CreateSolidBrush(RGB(0, 0, 255)); 
+            // 파랑 브러쉬 dc 선택, 흰색 브러쉬 반환값 반환 
+            // 이 때 SelectObject가 리턴하는 이전 브러시의 핸들은 복구를 위해 OldBrush 등의 변수에 저장해 두어야 한다
+            HBRUSH oldbrush = (HBRUSH)SelectObject(hdc, bluebrush); 
+
+            Rectangle(hdc, 100, 100, 500, 500);
+
+            // 다시 흰색 원본 브러쉬로 선택
+            SelectObject(hdc, oldbrush); 
+            // 파랑 브러쉬 삭제
+            DeleteObject(bluebrush);
+ 
+            HPEN redPen = CreatePen(2, 3, RGB(255, 0, 0));
+            HPEN oldPen = (HPEN)SelectObject(hdc, redPen); 
+
+            Ellipse(hdc, 300, 300, 700, 700);
+            DeleteObject(redPen);
+
+            // DC: 화면 출력에 필요한 모든 정보를 가지는 데이터 구조체
+            //     GDI 모듈에 의해 관리
+            //     폰트, 굵기, 색상 등...화면 출력에 필요한 모든 경우 DC를 통해서 진행 가능
+            // 
             // TODO: Add any drawing code that uses hdc here...
             EndPaint(hWnd, &ps);
         }
