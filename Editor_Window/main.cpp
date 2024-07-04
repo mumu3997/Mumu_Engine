@@ -3,9 +3,14 @@
 
 #include "framework.h"
 #include "Editor_Window.h"
+#include "..\\MumuEngine_SOURCE\MuApplication.h" 
 
 #define MAX_LOADSTRING 100
 
+Application app;
+//
+// 
+// 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -26,7 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 핸들(올바
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: Place code here.
-
+    app.test();
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_EDITORWINDOW, szWindowClass, MAX_LOADSTRING);
@@ -42,15 +47,43 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 핸들(올바
 
     MSG msg;
 
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+
+    // GetMessage(&msg, nullptr, 0, 0)
+    // 프로세스에서 발생한 메세지를 메세지 큐에서 가져오는 함수
+    // 메세지큐에 아무것도 없다 -> 아무 메세지도 가져오지 않음. -> 게임과 적합하지 않다
+    // 
+    // PeekMessage : 메세지큐에 메세지 유무에 상관없이 함수가 리턴됨.
+    //               리턴 값이 true인경우 메세지가 있고 false인 경우는 메세지가 없다는뜻
+    
+    while (true) 
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (msg.message == WM_QUIT)
+                break;
+
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        else 
+        {
+            // 메세지가 없을 경우
+            // 게임 로직
         }
     }
+
+    // Main message loop:
+    //while (GetMessage(&msg, nullptr, 0, 0))
+    //{
+    //    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+    //    {
+    //        TranslateMessage(&msg);
+    //        DispatchMessage(&msg);
+    //    }
+    //}
 
     return (int) msg.wParam;
 }
