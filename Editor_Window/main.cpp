@@ -7,7 +7,8 @@
 
 #define MAX_LOADSTRING 100
 
-Application app;
+mu::Application application;
+
 //
 // 
 // 
@@ -31,7 +32,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 핸들(올바
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: Place code here.
-    app.test();
+    // 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_EDITORWINDOW, szWindowClass, MAX_LOADSTRING);
@@ -72,6 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 핸들(올바
         {
             // 메세지가 없을 경우
             // 게임 로직
+            application.Run();
         }
     }
 
@@ -133,6 +135,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
+   application.Initialize(hWnd);
+
    if (!hWnd)
    {
       return FALSE;
@@ -180,29 +184,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
 
-            // 파랑 브러쉬 생성 
-            HBRUSH bluebrush = CreateSolidBrush(RGB(0, 0, 255)); 
-            // 파랑 브러쉬 dc 선택, 흰색 브러쉬 반환값 반환 
-            // 이 때 SelectObject가 리턴하는 이전 브러시의 핸들은 복구를 위해 OldBrush 등의 변수에 저장해 두어야 한다
-            HBRUSH oldbrush = (HBRUSH)SelectObject(hdc, bluebrush); 
-
-            Rectangle(hdc, 100, 100, 500, 500);
-
-            // 다시 흰색 원본 브러쉬로 선택
-            SelectObject(hdc, oldbrush); 
-            // 파랑 브러쉬 삭제
-            DeleteObject(bluebrush);
- 
-            HPEN redPen = CreatePen(2, 3, RGB(255, 0, 0));
-            HPEN oldPen = (HPEN)SelectObject(hdc, redPen); 
-
-            Ellipse(hdc, 300, 300, 700, 700);
-            DeleteObject(redPen);
-
-            // DC: 화면 출력에 필요한 모든 정보를 가지는 데이터 구조체
-            //     GDI 모듈에 의해 관리
-            //     폰트, 굵기, 색상 등...화면 출력에 필요한 모든 경우 DC를 통해서 진행 가능
-            // 
+            
             // TODO: Add any drawing code that uses hdc here...
             EndPaint(hWnd, &ps);
         }
