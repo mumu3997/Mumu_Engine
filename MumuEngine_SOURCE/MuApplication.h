@@ -1,5 +1,5 @@
 #pragma once
-#include "CommonInclude.h"
+#include "MuGameObject.h"
 
 namespace mu 
 {
@@ -21,9 +21,8 @@ namespace mu
 		HWND mHwnd;
 		HDC mHdc;
 
-		float mSpeed;
-		float mX;
-		float mY;
+		GameObject Player; 
+		GameObject Player2;
 	};
 }
 
